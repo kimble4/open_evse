@@ -45,6 +45,17 @@ void Gfi::Init(uint8_t v6)
 #endif // OEV6
   pinTest.init(reg,idx,DigitalPin::OUT);
 #endif
+#ifdef DC_GFCI_TEST
+  //volatile uint8_t *dcreg = DC_TEST_REG;
+  //volatile uint8_t dcidx  = DCTEST_IDX;
+#ifdef OEV6
+  if (v6) {
+    pinMode(V6_DC_TEST_PIN,OUTPUT);
+  }
+#else
+  //pinDCTest.init(reg,idx,DigitalPin::OUT);
+#endif // OEV6
+#endif //DC_GFCI_TEST
 
   Reset();
 }
@@ -93,6 +104,33 @@ uint8_t Gfi::SelfTest()
     delay(50);
   }
   if (i == 40) return 3;
+
+#ifdef DC_GFCI_TEST
+  if (testSuccess) {  //no point continuing unless AC test was successful
+    testSuccess = 0;
+    // turn on DC test pin
+#ifdef V6_DC_TEST_PIN
+    digitalWrite(V6_DC_TEST_PIN,HIGH);
+#endif
+    for(int i=0; !testSuccess && (i < GFI_TEST_CYCLES); i++) {
+      //just wait this time...
+      delayMicroseconds(GFI_PULSE_ON_US);
+      delayMicroseconds(GFI_PULSE_OFF_US);
+    }
+    //turn off the DC test pin
+#ifdef V6_DC_TEST_PIN
+    digitalWrite(V6_DC_TEST_PIN,LOW);
+#endif 
+    // wait for GFI pin to clear
+    for (i=0;i < 40;i++) {
+      WDT_RESET();
+      if (!pin.read()) break;
+      delay(50);
+    }
+    if (i == 40) return 4;
+  }
+  //if testSuccess == 1 at this point then both tests were successful
+#endif //DC_GFCI_TEST
 
 #ifndef OPENEVSE_2
   // sometimes getting spurious GFI faults when testing just before closing
