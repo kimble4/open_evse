@@ -1002,6 +1002,7 @@ public:
   TempMonitor() {}
   void Init();
   void Read();
+  uint8_t SetTemperature(uint8_t sensor, int16_t temperature);
 
   void SetBlinkAlarm(int8_t tf) {
     if (tf) m_Flags |= TMF_BLINK_ALARM;

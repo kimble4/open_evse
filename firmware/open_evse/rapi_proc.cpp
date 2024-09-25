@@ -538,6 +538,13 @@ int EvseRapiProcessor::processCmd()
       }
       break;
 #endif // VOLTMETER
+#ifdef TEMPERATURE_MONITORING
+    case 'P':
+      if (tokenCnt == 3) {
+        rc = g_TempMonitor.SetTemperature(dtou32(tokens[1]),dtou32(tokens[2]));
+      }
+      break;
+#endif // TEMPERATURE_MONITORIG
 #ifdef DELAYTIMER     
     case 'T': // timer
       if (tokenCnt == 5) {

@@ -286,19 +286,26 @@ void TempMonitor::Init()
 
 void TempMonitor::Read()
 {
+  int16_t t = TEMPERATURE_NOT_INSTALLED;
   unsigned long curms = millis();
   if ((curms - m_LastUpdate) >= TEMPMONITOR_UPDATE_INTERVAL) {
 #ifdef TMP007_IS_ON_I2C
-    m_TMP007_temperature = m_tmp007.readObjTempC10();   //  using the TI TMP007 IR sensor
+    t = m_tmp007.readObjTempC10();   //  using the TI TMP007 IR sensor
+    if (t != TEMPERATURE_NOT_INSTALLED) {
+      m_TMP007_temperature = t;
+    } 
 #endif
 #ifdef MCP9808_IS_ON_I2C
-    m_MCP9808_temperature = m_tempSensor.readAmbient();  // for the MCP9808
+    t = m_tempSensor.readAmbient();  // for the MCP9808
+    if (t != TEMPERATURE_NOT_INSTALLED) {
+      m_MCP9808_temperature = t;
+    }
 #endif
 
        
 #ifdef RTC
 #ifdef OPENEVSE_2
-    m_DS3231_temperature = TEMPERATURE_NOT_INSTALLED;  // OpenEVSE II does not use the DS3231
+    //m_DS3231_temperature = TEMPERATURE_NOT_INSTALLED;  // OpenEVSE II does not use the DS3231
 #else // !OPENEVSE_2
     // This code chunk below reads the DS3231 RTC's internal temperature sensor            
     Wire.beginTransmission(DS1307_ADDRESS);
@@ -323,8 +330,8 @@ void TempMonitor::Read()
                                                                         // I wrote this note so nobody wastes time trying to "fix" this in software
                                                                         // since fundamentally it is a hardware limitaion of the DS3231.
       }                                                                    
-    else                                                                    
-      m_DS3231_temperature = TEMPERATURE_NOT_INSTALLED;
+    // else                                                                    
+    //   m_DS3231_temperature = TEMPERATURE_NOT_INSTALLED;
     
 #endif // OPENEVSE_2
 #endif // RTC
@@ -332,6 +339,27 @@ void TempMonitor::Read()
     m_LastUpdate = curms;
   }
 }
+
+uint8_t TempMonitor::SetTemperature(uint8_t sensor, int16_t temperature) {
+  switch(sensor) {
+    case 1: // DS3231
+      m_DS3231_temperature = temperature;
+      return 0;
+      break;
+    case 2: // MCP9808
+      m_MCP9808_temperature = temperature;
+      return 0;
+      break;
+    case 3: // TMP007
+      m_TMP007_temperature = temperature;
+      return 0;
+      break;
+    default:
+      return 1;
+      break;
+  }
+}
+
 #endif // TEMPERATURE_MONITORING
 
 
