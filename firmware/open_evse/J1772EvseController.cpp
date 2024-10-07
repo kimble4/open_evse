@@ -275,27 +275,15 @@ void J1772EVSEController::chargingOn()
     Serial.print("\nrelayCloseMs: ");Serial.println(m_relayCloseMs);
     Serial.print("relayHoldPwm: ");Serial.println(m_relayHoldPwm);
     // turn on charging pin to close relay
-#ifdef V6_CHARGING_PIN
     digitalWrite(V6_CHARGING_PIN,HIGH);
-#endif    
-#ifdef V6_CHARGING_PIN2
     digitalWrite(V6_CHARGING_PIN2,HIGH);
-#endif
     delay(m_relayCloseMs);
     // switch to PWM to hold closed
-#ifdef V6_CHARGING_PIN
     analogWrite(V6_CHARGING_PIN,m_relayHoldPwm);
-#endif
-#ifdef V6_CHARGING_PIN2
     analogWrite(V6_CHARGING_PIN2,m_relayHoldPwm);
-#endif
 #else // !RELAY_PWM
-#ifdef V6_CHARGING_PIN
     digitalWrite(V6_CHARGING_PIN,HIGH);
-#endif
-#ifdef V6_CHARGING_PIN2
     digitalWrite(V6_CHARGING_PIN2,HIGH);
-#endif
 #endif // RELAY_PWM
   }
   else {
@@ -335,12 +323,8 @@ void J1772EVSEController::chargingOff()
 #ifdef RELAY_AUTO_PWM_PIN
   digitalWrite(RELAY_AUTO_PWM_PIN,LOW);
 #else // !RELAY_AUTO_PWM_PIN
-#ifdef V6_CHARGING_PIN
     digitalWrite(V6_CHARGING_PIN,LOW);
-#endif
-#ifdef V6_CHARGING_PIN2
     digitalWrite(V6_CHARGING_PIN2,LOW);
-#endif
 #endif // RELAY_AUTO_PWM_PIN
   }
   else {
@@ -983,12 +967,8 @@ void J1772EVSEController::Init()
 
 #ifdef OEV6
   if (isV6()) {
-#ifdef V6_CHARGING_PIN
     pinMode(V6_CHARGING_PIN,OUTPUT);
-#endif
-#ifdef V6_CHARGING_PIN2
     pinMode(V6_CHARGING_PIN2,OUTPUT);
-#endif
   }
   else { // !V6
 #endif // OEV6
