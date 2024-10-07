@@ -206,7 +206,7 @@ SL 1|2|A  - set service level L1/L2/Auto
  $SL 2*15
  $SL A*24
 SM voltscalefactor voltoffset - set voltMeter settings
-SM sensor temperature - set temPerature
+SP sensor temperature - set temPerature
 ST starthr startmin endhr endmin - set timer
  $ST 0 0 0 0^23 - cancel timer
 SV mv - Set Voltage for power calculations to mv millivolts
