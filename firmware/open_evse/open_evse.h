@@ -452,6 +452,14 @@ extern AutoCurrentCapacityController g_ACCController;
 #define MAX_CURRENT_CAPACITY_L2 80 // J1772 Max for L2 = 80
 #endif
 
+#ifndef VOLTMETER
+#define VOLTMETER
+#endif
+
+#ifndef SHIFTED_VOLTMETER
+#define SHIFTED_VOLTMETER
+#endif
+
 //J1772EVSEController
 
 #define CURRENT_PIN 0 // analog current reading pin ADCx
@@ -464,12 +472,15 @@ extern AutoCurrentCapacityController g_ACCController;
 // This is just a wild guess
 // #define VOLTMETER_SCALE_FACTOR (266)     // original guess
 //#define DEFAULT_VOLT_SCALE_FACTOR (262)        // calibrated for Craig K OpenEVSE II build
-#define DEFAULT_VOLT_SCALE_FACTOR (298)        // calibrated for lincomatic's OEII
+//#define DEFAULT_VOLT_SCALE_FACTOR (298)        // calibrated for lincomatic's OEII
+#define DEFAULT_VOLT_SCALE_FACTOR (602) // for inverter at 223V
+#define DEFAULT_VOLT_SCALE_FACTOR (1220)
 #endif // DEFAULT_VOLT_SCALE_FACTOR
 #ifndef DEFAULT_VOLT_OFFSET
 // #define VOLTMETER_OFFSET_FACTOR (40000)  // original guess
 //#define DEFAULT_VOLT_OFFSET (46800)     // calibrated for Craig K OpenEVSE II build
-#define DEFAULT_VOLT_OFFSET (12018)     // calibrated for lincomatic's OEII
+//#define DEFAULT_VOLT_OFFSET (12018)     // calibrated for lincomatic's OEII
+#define DEFAULT_VOLT_OFFSET (516)
 #endif // DEFAULT_VOLT_OFFSET
 #ifndef VOLTMETER_PIN
 // N.B. Note, ADC2 is already used as PP_PIN so beware of potential clashes
