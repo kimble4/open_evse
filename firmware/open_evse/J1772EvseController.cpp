@@ -1270,6 +1270,9 @@ void J1772EVSEController::Update(uint8_t forcetransition)
 
   if (m_EvseState == EVSE_STATE_DISABLED) {
     m_PrevEvseState = m_EvseState; // cancel state transition
+#ifdef VOLTMETER
+  ReadVoltmeter();
+#endif // VOLTMETER
     return;
   }
 
@@ -1341,6 +1344,9 @@ void J1772EVSEController::Update(uint8_t forcetransition)
 
     if (cancelTransition) {
       m_PrevEvseState = m_EvseState; // cancel state transition
+#ifdef VOLTMETER
+      ReadVoltmeter();
+#endif // VOLTMETER
       return;
     }
   }
